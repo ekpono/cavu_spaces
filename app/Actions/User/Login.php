@@ -21,14 +21,14 @@ class Login
 
             if (! $data) {
                 return response()->json([
-                    "message" => 'Invalid credentials.',
+                    'message' => 'Invalid credentials.',
                 ], ResponseAlias::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             return response()->json($data);
         } catch (Exception $e) {
             return response()->json([
-                "message" => 'Login failed.',
+                'message' => 'Login failed.',
             ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -42,7 +42,7 @@ class Login
             $success = [
                 'token' => $user->createToken('default')->plainTextToken,
                 'user' => new UserDetail($user),
-                'message' => 'User login successful'
+                'message' => 'User login successful',
             ];
         }
 

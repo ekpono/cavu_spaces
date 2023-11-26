@@ -1,10 +1,15 @@
 <?php
 
+use App\Actions\User\Login;
+use App\Actions\User\Register;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1/user')->group(function() {
+Route::prefix('v1/user')->group(function () {
     $sanctum = 'auth:sanctum';
 
-    Route::post('login', \App\Actions\User\Login::class)->withoutMiddleware($sanctum);
-    Route::post('register', \App\Actions\User\Register::class)->withoutMiddleware($sanctum);
+    Route::get('/', fn (Request $request) => $request->user());
+
+    Route::post('login', Login::class)->withoutMiddleware($sanctum);
+    Route::post('register', Register::class)->withoutMiddleware($sanctum);
 });

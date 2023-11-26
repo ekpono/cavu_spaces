@@ -32,6 +32,14 @@ return [
     'env' => env('APP_ENV', 'production'),
 
     /*
+     * Default currency for the application.
+     */
+
+    'default_currency' => 'GBP',
+
+
+
+    /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
     |--------------------------------------------------------------------------
@@ -159,7 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -182,7 +190,7 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
+        'PDF' => Mccarlosen\LaravelMpdf\Facades\LaravelMpdf::class
     ])->toArray(),
 
 ];

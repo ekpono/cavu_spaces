@@ -5,9 +5,7 @@ namespace App\Actions\User;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Http;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -25,21 +23,21 @@ class Register
             return response()->json([
                 'token' => $user->createToken('default')->plainTextToken,
                 'user' => $user,
-                'message' => 'User registration successful'
+                'message' => 'User registration successful',
             ]);
         } catch (Exception $e) {
             return response()->json([
-                'message' => 'User registration failed'
+                'message' => 'User registration failed',
             ], ResponseAlias::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    protected function createUser(array $data) : User
+    protected function createUser(array $data): User
     {
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+            'password' => Hash::make($data['password']),
         ]);
     }
 }

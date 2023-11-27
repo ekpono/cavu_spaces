@@ -116,14 +116,18 @@ class Booking
     /**
      * Get all available spots.
      *
-     * @param  Spot[]  $spots
-     * @param  Carbon  $startDate
-     * @param  Carbon  $endDate
+     * @param Spot[] $spots
+     * @param Carbon $startDate
+     * @param Carbon $endDate
      * @return Spot[]
      */
-    private function getAllAvailableSpots($spots, $startDate, $endDate)
+    public function getAllAvailableSpots( $spots, Carbon $startDate, Carbon $endDate = null)
     {
         $availableSpots = [];
+
+        if ($endDate === null) {
+            $endDate = $startDate;
+        }
 
         foreach ($spots as $spot) {
             if (! $this->isBooked($spot, $startDate, $endDate)) {

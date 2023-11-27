@@ -14,7 +14,7 @@ Route::prefix('v1/bookings')->middleware($sanctum)->group(function () {
 
     Route::post('/', CreateBooking::class);
 
-    Route::patch('/{id}', UpdateBooking::class);
+    Route::put('/{booking}', UpdateBooking::class);
 
     Route::delete('/{booking}', CancelBooking::class);
 

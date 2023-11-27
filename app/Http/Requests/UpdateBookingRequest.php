@@ -22,9 +22,9 @@ class UpdateBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date'],
-            'plate_number' => ['required', 'string'],
+            'start_date' => ['sometimes', 'date', 'after_or_equal:today'],
+            'end_date' => ['required_with:start_date', 'date', 'after_or_equal:start_date'],
+            'plate_number' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

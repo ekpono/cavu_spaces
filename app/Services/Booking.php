@@ -22,11 +22,28 @@ class Booking
     /**
      * Get available spots based on the provided criteria.
      *
+     * @param  Carbon  $startDate
+     * @param  Carbon  $endDate
+     * @param  bool  $allSpots
+     * @param  BookingModel|null  $booking The current booking (if any, excludes this spot from the results)
+     *
      * @return Spot|Spot[]|null
      */
-    public function getAvailableSpot(Carbon $startDate, Carbon $endDate, bool $allSpots = false)
+    public function getAvailableSpot(
+        Carbon $startDate,
+        Carbon $endDate,
+        bool $allSpots = false,
+        BookingModel $booking = null
+    )
     {
         $spots = $this->getAllSpots();
+
+        // Remove the current booking from the spots collection
+        if ($booking) {
+            $spots = $spots->reject(function ($spot) use ($booking) {
+                return $spot->id === $booking->spot_id;
+            });
+        }
 
         if ($allSpots) {
             return $this->getAllAvailableSpots($spots, $startDate, $endDate);
@@ -44,7 +61,7 @@ class Booking
         $systemConfig = $this->getSystemConfiguration();
 
         // Retrieve configuration values or provide defaults
-        $basePrice = $systemConfig->get('base_price', 0); // Default to 0 if not found
+        $basePrice = $systemConfig->get('base_price', 0);
         $weekendPriceMultiplier = $systemConfig->get('weekend_price_multiplier', 0);
         $summerPriceMultiplier = $systemConfig->get('summer_price_multiplier', 0);
         $winterPriceMultiplier = $systemConfig->get('winter_price_multiplier', 0);
@@ -80,12 +97,12 @@ class Booking
     /**
      * Get a single available spot.
      *
-     * @param  Spot[]  $spots
-     * @param  Carbon  $startDate
-     * @param  Carbon  $endDate
+     * @param Spot[] $spots
+     * @param Carbon $startDate
+     * @param Carbon $endDate
      * @return Spot|null
      */
-    private function getSingleAvailableSpot($spots, $startDate, $endDate)
+    public function getSingleAvailableSpot($spots, Carbon $startDate, Carbon $endDate): ?Spot
     {
         foreach ($spots as $spot) {
             if (! $this->isBooked($spot, $startDate, $endDate)) {
@@ -141,7 +158,7 @@ class Booking
      *
      * @return Spot[]
      */
-    private function getAllSpots()
+    public function getAllSpots()
     {
         return Cache::rememberForever('available_spots', function () {
             return Spot::all();
